@@ -2,10 +2,80 @@
 <head>
   <title>朝までそれ正解</title>
   <meta charset="utf-8">
+  <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
   <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 </head>
 <body>
-
+  <div class="header">
+    <div class="title">
+      <p id="gekiron">激論!</p>
+      <p id="soreseikai">朝までそれ正解!</p>
+    </div>
+    <div class="odai">
+      <textarea id="odaitext" rows="1" wrap="soft">「と」で始まる自宅にあったらかっこいいものは？</textarea>
+    </div>
+  </div>
+  <div class="main_area">
+    <div class="user" data-id="0">
+      <div class="name"><p></p></div>
+      <div class="panel">
+        <p></p>
+      </div>
+    </div>
+    <div class="user" data-id="1">
+      <div class="name"><p></p></div>
+      <div class="panel">
+        <p></p>
+      </div>
+    </div>
+    <div class="user" data-id="2">
+      <div class="name"><p></p></div>
+      <div class="panel">
+        <p></p>
+      </div>
+    </div>
+    <div class="user" data-id="3">
+      <div class="name"><p></p></div>
+      <div class="panel">
+        <p></p>
+      </div>
+    </div>
+    <div class="user" data-id="4">
+      <div class="name"><p></p></div>
+      <div class="panel">
+        <p></p>
+      </div>
+    </div>
+    <div class="user" data-id="5">
+      <div class="name"><p></p></div>
+      <div class="panel">
+        <p></p>
+      </div>
+    </div>
+    <div class="user" data-id="6">
+      <div class="name"><p></p></div>
+      <div class="panel">
+        <p></p>
+      </div>
+    </div>
+    <div class="user" data-id="7">
+      <div class="name"><p></p></div>
+      <div class="panel">
+        <p></p>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="name_wrapper">
+      <input type="text" id="name_input" value="" placeholder="名前">
+      <input type="button" id="name_btn" value="登録">
+    </div>
+    <div class="answer_wrapper">
+      <input type="text" id="answer_input" value="" placeholder="回答">
+      <input type="button" id="answer_btn" value="書く">
+      <input type="button" id="open_btn" value="開く">
+    </div>
+  </div>
   <script src="js/main.js"></script>
   <link rel="stylesheet" href="css/main.css">
 </body>
