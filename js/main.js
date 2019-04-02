@@ -12,7 +12,7 @@ const dbQuestion = db.ref('/question');
 dbQuestion.on("value", function(snapshot) {
   const questionText = snapshot.val();
   const $odaiText = $('#odaitext');
-  $odaiText.val(questionText);
+  $odaiText.val(questionText).trigger('keyup');
 });
 
 for(let id = 0; id < 8; id++) {
@@ -46,14 +46,18 @@ for(let id = 0; id < 8; id++) {
 }
 
 $('.user').on('click', function() {
-  const result = window.confirm('ユーザを変更しますか？');
+	const name = window.prompt("ユーザー名", "");
 
-  if(result) {
+  if(name != "" && name != null) {
     const id = $(this).data('id');
-    console.log(id);
 
     $('.user').removeClass('selected');
     $(this).addClass('selected');
+
+    const dbAnswer = db.ref('/user_list/user' + id + '/name');
+    dbAnswer.set(name);
+  } else if(name == "") {
+  	window.alert("ユーザー名が入力されていません");
   }
 });
 
@@ -64,44 +68,47 @@ $('.title').on('click', function() {
   dbQuestion.set(odaitext);
 });
 
-$('#answer_btn').on('click', function() {
-  const $selectUser = $('.user.selected');
-  if($selectUser.length != 1) {
-    window.alert('ユーザを選択してください');
-    return;
-  }
-  const id = $selectUser.data('id');
-  const answer = $('#answer_input').val();
-
-  const dbAnswer = db.ref('/user_list/user' + id + '/answer');
-  const dbOpen = db.ref('/user_list/user' + id + '/is_open');
-  dbAnswer.set(answer);
-  dbOpen.set(false);
-});
-
 $('#open_btn').on('click', function() {
   const $selectUser = $('.user.selected');
   if($selectUser.length != 1) {
     window.alert('ユーザを選択してください');
     return;
   }
+  const answer = $('#answer_input').val();
+  if(answer == "" || answer == null) {
+    window.alert('回答を入力してください');
+    return;
+  }
+
   const id = $selectUser.data('id');
 
+  const dbAnswer = db.ref('/user_list/user' + id + '/answer');
   const dbOpen = db.ref('/user_list/user' + id + '/is_open');
+  dbAnswer.set(answer);
   dbOpen.set(true);
 });
 
-$('#name_btn').on('click', function() {
+$('#reset_btn').on('click', function() {
   const $selectUser = $('.user.selected');
   if($selectUser.length != 1) {
     window.alert('ユーザを選択してください');
     return;
   }
   const id = $selectUser.data('id');
-  const name = $('#name_input').val();
 
-  const dbAnswer = db.ref('/user_list/user' + id + '/name');
+  const dbAnswer = db.ref('/user_list/user' + id + '/is_open');
   const dbOpen = db.ref('/user_list/user' + id + '/is_open');
-  dbAnswer.set(name);
+  dbAnswer.set("");
   dbOpen.set(false);
+   $('#answer_input').val("");
+});
+
+$(window).on('resize', function() {
+  $('#odaitext').trigger('keyup');
+});
+
+$('#odaitext').keyup(function() {
+  $(this).css('height', 'auto');
+  const height = $(this)[0].scrollHeight;
+  $(this).css('height', height);
 });

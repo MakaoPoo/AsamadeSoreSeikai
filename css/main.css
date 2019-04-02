@@ -55,18 +55,18 @@ body {
 #odaitext {
   text-align: center;
   width: 100%;
-  min-height: 60px;
-  max-height: 160px;
   margin: 0;
+  height: auto;
   font-size: 50px;
   color: #fff;
   background: transparent;
   border: none;
-  resize: vertical;
+  resize: none;
 }
 
 .main_area {
   text-align: center;
+  margin-bottom: 100px;
 }
 
 .user {
@@ -108,17 +108,19 @@ body {
   top: 60px;
   width: 356px;
   height: 216px;
-  background: #fff8d6;
+  background: #f7cd87;
   border: 4px solid #000;
 }
 
 .panel.open {
-  animation: open_anime 1s ease-in 1;
+  background: #fff8d6;
+  animation: open_anime 0.8s ease-in 1;
 }
 @keyframes open_anime {
   0% {
     top: 60px;
     transform: scaleX(1);
+    background: #f7cd87;
   }
   30% {
     top: 20px;
@@ -126,10 +128,15 @@ body {
   50% {
     top: 20px;
     transform: scaleX(0);
+    background: #f7cd87;
+  }
+  51% {
+    background: #fff8d6;
   }
   100% {
     top: 60px;
     transform: scaleX(1);
+    background: #fff8d6;
   }
 }
 
@@ -148,7 +155,7 @@ body {
 
 .panel.open > p {
   opacity: 1;
-  animation: open_text_anime 1s ease-in 1;
+  animation: open_text_anime 0.8s ease-in 1;
 }
 @keyframes open_text_anime {
   0% {
@@ -166,12 +173,15 @@ body {
 }
 
 .footer {
-  margin: 10px 0;
+  position: fixed;
+  bottom: 0;
   width: 100%;
   text-align: center;
+  background: #fff8d6;
+  padding: 10px;
 }
 
-.name_wrapper, .answer_wrapper {
+.answer_wrapper {
   display: inline-block;
   margin: 10px 0;
 }
@@ -186,10 +196,6 @@ input {
 input[type="button"] {
   width: 120px;
   cursor: pointer;
-}
-
-#name_input {
-  width: 300px;
 }
 
 #answer_input {
