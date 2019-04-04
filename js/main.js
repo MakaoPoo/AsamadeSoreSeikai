@@ -71,7 +71,7 @@ $('.title').on('click', function() {
 $('#open_btn').on('click', function() {
   const $selectUser = $('.user.selected');
   if($selectUser.length != 1) {
-    window.alert('ユーザを選択してください');
+    window.alert('フリップを選択してください');
     return;
   }
   const answer = $('#answer_input').val();
@@ -91,12 +91,12 @@ $('#open_btn').on('click', function() {
 $('#reset_btn').on('click', function() {
   const $selectUser = $('.user.selected');
   if($selectUser.length != 1) {
-    window.alert('ユーザを選択してください');
+    window.alert('フリップを選択してください');
     return;
   }
   const id = $selectUser.data('id');
 
-  const dbAnswer = db.ref('/user_list/user' + id + '/is_open');
+  const dbAnswer = db.ref('/user_list/user' + id + '/answer');
   const dbOpen = db.ref('/user_list/user' + id + '/is_open');
   dbAnswer.set("");
   dbOpen.set(false);
