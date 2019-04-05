@@ -14,7 +14,7 @@ function initWebAPI() {
 function loadSound(name, loaded){
   if (!audioCtx) { return; }
   const request = new XMLHttpRequest();
-  const url = "/resource/" + name;
+  const url = "resource/" + name;
   request.open('GET', url, true);
   request.responseType = 'arraybuffer';
   request.onload = function() {
