@@ -121,6 +121,9 @@ $(function() {
   }
 
   const dsipWInnerEvent = function(scoreList, maxScore, minScore) {
+    if(!resultEventFlag) {
+      return;
+    }
     playSound(fanfareSE);
     console.log(scoreList);
     console.log(maxScore);

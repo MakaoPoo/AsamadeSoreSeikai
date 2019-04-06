@@ -19,6 +19,7 @@ body {
   background: linear-gradient(to bottom, #ffffff 0%,#606060 100%);
   border: 2px solid #000;
   cursor: pointer;
+  user-select: none;
 }
 
 .title:hover::before {
@@ -133,14 +134,16 @@ body {
   position: absolute;
   top: 50%;
   transform: translate(-50% ,-50%);
-  cursor: pointer;
+  user-select: none;
 }
 
 .name .fa-poop {
+  cursor: pointer;
   right: -15px;
 }
 
 .name .fa-heart {
+  cursor: pointer;
   right: 25px;
 }
 
