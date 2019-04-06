@@ -8,6 +8,7 @@ body {
 }
 
 .title {
+  position: relative;
   vertical-align: middle;
   display: inline-block;
   margin: 0 20px;
@@ -18,6 +19,28 @@ body {
   background: linear-gradient(to bottom, #ffffff 0%,#606060 100%);
   border: 2px solid #000;
   cursor: pointer;
+}
+
+.title:hover::before {
+  content: "結果\A発表";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  color: #ffffff;
+  background: rgba(72, 74, 219, 0.4);
+}
+
+.title:hover::after {
+  content: "お題\A変更";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  color: #ffffff;
+  background: rgba(219, 72, 72, 0.4);
 }
 
 #gekiron {
@@ -79,7 +102,6 @@ body {
   background: linear-gradient(135deg, #ffad33 0%,#f0ff54 50%,#ffad33 100%);
   border: 2px solid #000;
   box-sizing: content-box;
-  cursor: pointer;
 }
 
 .user.selected {
@@ -89,6 +111,7 @@ body {
 }
 
 .name {
+  position: relative;
   width: 100%;
   height: 30px;
   border-bottom: 2px solid #000;
@@ -97,9 +120,85 @@ body {
 }
 
 .name > p {
+  position: absolute;
   margin: 0;
   font-size: 30px;
   color: #000;
+  width: 100%;
+  top: 50%;
+  transform: translate(0 ,-50%);
+}
+
+.name i {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50% ,-50%);
+  cursor: pointer;
+}
+
+.name .fa-poop {
+  right: -15px;
+}
+
+.name .fa-heart {
+  right: 25px;
+}
+
+.name .fa-crown {
+  top: 5px;
+  right: -30px;
+  color: #ffef1d;
+  animation: crown_anime 0.6s ease-in-out 1;
+  display: none;
+  -webkit-text-stroke: 2px #000;
+}
+
+.name .fa-poo {
+  top: 5px;
+  right: -20px;
+  color: #874e12;
+  animation: crown_anime 0.6s ease-in-out 1;
+  display: none;
+  -webkit-text-stroke: 2px #000;
+}
+
+.gray {
+  color: #b5b5b5;
+  -webkit-text-stroke: 2px #000;
+}
+
+.pink {
+  color: #ff80eb;
+  animation: icon_anime 0.5s ease-in-out 1;
+}
+
+.brown {
+  color: #874e12;
+  animation: icon_anime 0.5s ease-in-out 1;
+}
+
+@keyframes icon_anime {
+  0% {
+    transform: translate(-50% ,-50%) scale(0);
+  }
+  50% {
+    transform: translate(-50% ,-50%) scale(1.2);
+  }
+  100% {
+    transform: translate(-50% ,-50%) scale(1);
+  }
+}
+
+@keyframes crown_anime {
+  0% {
+    transform: translate(-50% ,-50%) scale(0) rotate(180deg);
+  }
+  50% {
+    transform: translate(-50% ,-50%) scale(1.2) rotate(0);
+  }
+  100% {
+    transform: translate(-50% ,-50%) scale(1);
+  }
 }
 
 .panel {
@@ -110,6 +209,7 @@ body {
   height: 216px;
   background: #f7cd87;
   border: 4px solid #000;
+  cursor: pointer;
 }
 
 .panel.open {
@@ -170,6 +270,28 @@ body {
   100% {
     opacity: 1;
   }
+}
+
+.judge {
+  pointer-events: none;
+  position: absolute;
+  width: 50px;
+  height: 300px;
+  top: 0;
+}
+
+.judge i {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50% ,-50%);
+}
+
+.judge_good {
+  left: 0;
+}
+
+.judge_bad {
+  right: 0;
 }
 
 .footer {

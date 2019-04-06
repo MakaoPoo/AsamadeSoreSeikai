@@ -31,6 +31,7 @@ function loadSound(name, loaded){
 }
 
 let prevSource = null;
+let prevSeSource = null;
 
 function playSound(buffer){
   if(buffer == null) {
@@ -42,6 +43,32 @@ function playSound(buffer){
   if(prevSource != null) {
     prevSource.stop();
   }
+  source.start(0);
+  prevSource = source;
+}
+
+function playSeSound(buffer){
+  if(buffer == null) {
+    return;
+  }
+  const source = audioCtx.createBufferSource();
+  source.buffer = buffer;
+  source.connect(audioCtx.destination);
+  if(prevSeSource != null) {
+    prevSeSource.stop();
+  }
+  source.start(0);
+  prevSeSource = source;
+}
+
+function playLoopSound(buffer){
+  if(buffer == null) {
+    return;
+  }
+  const source = audioCtx.createBufferSource();
+  source.buffer = buffer;
+  source.loop = true;
+  source.connect(audioCtx.destination);
   source.start(0);
   prevSource = source;
 }
