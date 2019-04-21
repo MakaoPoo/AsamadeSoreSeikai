@@ -333,7 +333,8 @@ $(function() {
 
   $('#timer_60s_btn').on('click', function() {
     $.ajax({
-      type: 'GET'
+      type: 'GET',
+      cache: false
     }).done(function(data, status, xhr) {
       const serverDate = new Date(xhr.getResponseHeader('Date'));
       globalTimestamp = serverDate.getTime();
@@ -364,7 +365,8 @@ $(function() {
     }
 
     $.ajax({
-      type: 'GET'
+      type: 'GET',
+      cache: false
     }).done(function(data, status, xhr) {
       const serverDate = new Date(xhr.getResponseHeader('Date'));
       globalTimestamp = serverDate.getTime();
