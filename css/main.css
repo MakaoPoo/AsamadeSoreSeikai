@@ -3,18 +3,20 @@ body {
   background: linear-gradient(135deg, #b8e1fc 0%,#a9d2f3 10%,#90bae4 25%,#90bcea 37%,#90bff0 50%,#6ba8e5 51%,#a2daf5 83%,#bdf3fd 100%);
 }
 
-.header {
+#header {
+  position: fixed;
+  width: 100%;
   padding: 20px 0;
+  z-index: 10;
 }
 
-.title {
+#title {
   position: relative;
   vertical-align: middle;
   display: inline-block;
   margin: 0 20px;
   padding: 10px 5px;
   width: 310px;
-  font-size: 50px;
   text-align: center;
   background: linear-gradient(to bottom, #ffffff 0%,#606060 100%);
   border: 2px solid #000;
@@ -22,31 +24,10 @@ body {
   user-select: none;
 }
 
-.title:hover::before {
-  content: "結果\A発表";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 50%;
-  height: 100%;
-  color: #ffffff;
-  background: rgba(72, 74, 219, 0.4);
-}
-
-.title:hover::after {
-  content: "お題\A変更";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 50%;
-  height: 100%;
-  color: #ffffff;
-  background: rgba(219, 72, 72, 0.4);
-}
-
 #gekiron {
   margin: 0;
   font-size: 50px;
+  line-height: 50px;
   color: #ff0000;
   text-shadow: 2px 2px 0 #ffef5c,
   -2px 2px 0 #ffef5c,
@@ -57,6 +38,7 @@ body {
 #soreseikai {
   margin: 0;
   font-size: 40px;
+  line-height: 40px;
   color: #fff;
   text-shadow: 2px 2px 0 #000,
   -2px 2px 0 #000,
@@ -64,10 +46,46 @@ body {
   -2px -2px 0 #000;
 }
 
-.odai {
+#mainmenu {
+  display: none;
+  position: fixed;
+  background: #fff8d6;
+  border: 2px solid #000;
+  border-top: none;
+  text-align: left;
+}
+
+.menu {
+  width: 100%;
+  padding: 10px;
+  background: #fff8d6;
+  box-sizing: border-box;
+  border-bottom: 1px solid #000000;
+}
+
+.menu:hover {
+  background: #f7cd87;
+  cursor: pointer;
+}
+
+#mainmenu p {
+  display: inline-block;
+  font-size: 30px;
+  margin: 0;
+  color: #000;
+  user-select: none;
+}
+
+#mainmenu .menu_icon {
+  font-size: 25px;
+  width: 40px;
+  text-align: center;
+}
+
+#odai {
   vertical-align: middle;
   display: inline-block;
-  width: calc(100% - 420px);
+  width: calc(100% - 434px);
   margin: 0;
   padding: 10px 20px;
   font-size: 50px;
@@ -79,17 +97,20 @@ body {
 #odaitext {
   text-align: center;
   width: 100%;
+  min-height: 50px;
   margin: 0;
   height: auto;
   font-size: 50px;
+  line-height: 50px;
   color: #fff;
   background: transparent;
   border: none;
   resize: none;
 }
 
-.main_area {
+#main_area {
   text-align: center;
+  padding-top: 154px;
   margin-bottom: 130px;
 }
 
@@ -124,10 +145,12 @@ body {
   position: absolute;
   margin: 0;
   font-size: 30px;
+  line-height: 30px;
   color: #000;
   width: 100%;
   top: 50%;
   transform: translate(0 ,-50%);
+  user-select: none;
 }
 
 .name i {
@@ -138,16 +161,19 @@ body {
 }
 
 .name .fa-poop {
+  font-size: 35px;
   cursor: pointer;
   right: -15px;
 }
 
 .name .fa-heart {
+  font-size: 35px;
   cursor: pointer;
   right: 25px;
 }
 
 .name .fa-crown {
+  font-size: 50px;
   top: 5px;
   right: -30px;
   color: #ffef1d;
@@ -157,6 +183,7 @@ body {
 }
 
 .name .fa-poo {
+  font-size: 50px;
   top: 5px;
   right: -20px;
   color: #874e12;
@@ -222,7 +249,7 @@ body {
 @keyframes open_anime {
   0% {
     top: 60px;
-    transform: scaleX(1);
+    transform: rotateY(0deg);
     background: #f7cd87;
   }
   30% {
@@ -230,7 +257,7 @@ body {
   }
   50% {
     top: 20px;
-    transform: scaleX(0);
+    transform: rotateY(90deg);
     background: #f7cd87;
   }
   51% {
@@ -238,7 +265,7 @@ body {
   }
   100% {
     top: 60px;
-    transform: scaleX(1);
+    transform: rotateY(0deg);
     background: #fff8d6;
   }
 }
@@ -254,6 +281,7 @@ body {
   transform: translate(0, -50%);
   opacity: 0;
   word-wrap: break-word;
+  pointer-events: none;
 }
 
 .panel.open > p {
@@ -303,7 +331,37 @@ body {
   width: 100%;
   text-align: center;
   background: #fff8d6;
-  padding: 30px 10px;
+}
+
+.timer {
+  position: relative;
+  width: 100%;
+  height: 20px;
+}
+
+#timer_bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 100%;
+  background: #ff0000;
+}
+
+#timer_text {
+  position: absolute;
+  line-height: 100%;
+  left: 0;
+  top: 0;
+  height: 100%;
+  color: #000000;
+  margin: 0 5px;
+  font-weight: 800;
+  font-size: 20px;
+}
+
+.answer_wrapper {
+  margin: 20px 10px;
 }
 
 input {

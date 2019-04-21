@@ -17,7 +17,7 @@ $(function() {
     }
     nowOdaiText = snapshot.val();
     const $odaiText = $('#odaitext');
-    $odaiText.val(nowOdaiText).trigger('keyup');
+    $odaiText.text(nowOdaiText).trigger('change');
 
     $('.fa-heart, .fa-poop').show();
     $('.fa-crown, .fa-poo').hide();
@@ -56,6 +56,34 @@ $(function() {
       });
 
     }
+  });
+
+  const dbTimerStart = db.ref('/timer');
+  dbTimerStart.on("value", function(snapshot) {
+    const start_time = snapshot.val().start_time;
+    const timer_lenght = snapshot.val().timer_lenght;
+
+    if(timerEvent != null) {
+      window.clearTimeout(timerEvent);
+    }
+
+    $.ajax({
+      type: 'GET'
+    }).done(function(data, status, xhr) {
+      const serverDate = new Date(xhr.getResponseHeader('Date'));
+      globalTimestamp = serverDate.getTime();
+
+      const date = new Date();
+      const localTimestamp = date.getTime();
+
+      errorTime = localTimestamp - globalTimestamp;
+
+      if(globalTimestamp <= start_time + timer_lenght * 1000) {
+        playSeSound(pi1SE);
+        timerLoop(start_time, timer_lenght);
+      }
+
+    });
   });
 
   const resultEvent = function(goodSumList, badSumList) {
@@ -213,7 +241,8 @@ $(function() {
     if($user.hasClass('selected')) {
       return;
     }
-    const name = window.prompt("ユーザー名", "");
+    const $nameText = $user.find('.name > p');
+    const name = window.prompt("ユーザー名", $nameText.text());
 
     if(name != "" && name != null) {
       const id = $user.data('id');
@@ -222,10 +251,7 @@ $(function() {
       $user.addClass('selected');
 
       const dbName = db.ref('/user_list/user' + id + '/name');
-      const dbAnswer = db.ref('/user_list/user' + id + '/answer');
-
       dbName.set(name);
-      dbAnswer.set("");
 
       for(let userId = 0; userId < 8; userId++) {
         const dbGood = db.ref('/user_list/user' + userId + '/judge/good/from' + id);
@@ -258,20 +284,20 @@ $(function() {
     }
   });
 
-  $('.title').on('click', function(e) {
-    const clientX = e.pageX - $(this).offset().left;
-    const centerX = $(this).outerWidth() / 2;
+  $('#odai_change_btn').on('click', function(e) {
+    $('#mainmenu').slideUp(100);
 
-    if(clientX < centerX) {
-      const dbResultDisp = db.ref('/result_disp');
-      dbResultDisp.set(true);
-    } else {
-      const odaitext = $('#odaitext').val();
-      if(nowOdaiText == odaitext) {
+    const $odaiText = $('#odaitext');
+    const odaiText = window.prompt("お題", $odaiText.text());
+
+    if(odaiText != "" && odaiText != null) {
+      if(nowOdaiText == odaiText) {
         return;
       }
+      console.log(odaiText);
+
       const dbQuestion = db.ref('/question');
-      dbQuestion.set(odaitext);
+      dbQuestion.set(odaiText);
 
       const dbResultDisp = db.ref('/result_disp');
       dbResultDisp.set(false);
@@ -289,6 +315,70 @@ $(function() {
         }
       }
     }
+  });
+
+  $('#result_disp_btn').on('click', function(e) {
+    const dbResultDisp = db.ref('/result_disp');
+    dbResultDisp.set(true);
+
+    $('#mainmenu').slideUp(100);
+  });
+
+  $('#odai_box_btn').on('click', function() {
+    window.open('https://makaopoo.github.io/SoreSeikaiBox', '_blank'); // 新しいタブを開き、ページを表示
+
+    $('#mainmenu').slideUp(100);
+  });
+
+  $('#timer_60s_btn').on('click', function() {
+    $.ajax({
+      type: 'GET'
+    }).done(function(data, status, xhr) {
+      const serverDate = new Date(xhr.getResponseHeader('Date'));
+      globalTimestamp = serverDate.getTime();
+
+      const timer = {
+        start_time: globalTimestamp,
+        timer_lenght: 60
+      }
+
+      const dbTimerStart = db.ref('/timer');
+      dbTimerStart.set(timer);
+    });
+
+    $('#mainmenu').slideUp(100);
+  });
+
+  $('#timer_free_btn').on('click', function() {
+    const timer_length_str = window.prompt("時間設定(s)", lastFreeTime);
+    const timer_length = parseInt(timer_length_str, 10);
+
+    if(timer_length_str == null) {
+      return;
+    }
+
+    if(isNaN(timer_length) || timer_length_str == "") {
+      window.alert('数値を入力してください');
+      return;
+    }
+
+    $.ajax({
+      type: 'GET'
+    }).done(function(data, status, xhr) {
+      const serverDate = new Date(xhr.getResponseHeader('Date'));
+      globalTimestamp = serverDate.getTime();
+      lastFreeTime = timer_length;
+
+      const timer = {
+        start_time: globalTimestamp,
+        timer_lenght: timer_length
+      }
+
+      const dbTimerStart = db.ref('/timer');
+      dbTimerStart.set(timer);
+    });
+
+    $('#mainmenu').slideUp(100);
   });
 
   $('#open_btn').on('click', function() {
@@ -322,14 +412,19 @@ $(function() {
     $('#answer_input').val("");
   });
 
-  $(window).on('resize', function() {
-    $('#odaitext').trigger('keyup');
+  $(window).on('load', function() {
+    $(window).trigger('resize');
   });
 
-  $('#odaitext').keyup(function() {
-    $(this).css('height', 'auto');
-    const height = $(this)[0].scrollHeight;
-    $(this).css('height', height);
+  $(window).on('resize', function() {
+    $('#odaitext').trigger('change');
+  });
+
+  $('#odaitext').on('change', function() {
+    const headerHeight = $('#header').outerHeight();
+    $('#main_area').css('padding-top', headerHeight);
+
+    setMainmenu();
   });
 
   $('.fa-heart').on('click', function() {
@@ -377,14 +472,27 @@ $(function() {
       dbGood.set(false);
     }
   });
+
+  $('#title').on('click', function() {
+    if($('#mainmenu').css('display') == 'none') {
+      $('#mainmenu').slideDown(100);
+    } else {
+      $('#mainmenu').slideUp(100);
+    }
+  });
 });
 
 let nowOdaiText = null;
 let resultEventFlag = false;
+let timerEvent = null;
+let errorTime = 0;
+let lastFreeTime = 60;
 
 let dedenSE, dededenSE;
 let dramSE, dramendSE, fanfareSE;
 let goodSE, badSE;
+let pi1SE, pi2SE;
+
 $(window).on('mousedown touchdown', function() {
   initWebAPI();
 
@@ -416,5 +524,42 @@ $(window).on('mousedown touchdown', function() {
     badSE = bufferData;
   });
 
+  loadSound("pi1.wav", function(bufferData) {
+    pi1SE = bufferData;
+  });
+
+  loadSound("pi2.wav", function(bufferData) {
+    pi2SE = bufferData;
+  });
+
   $(window).off('mousedown touchdown');
 });
+
+const setMainmenu = function() {
+  const titleLeft = $('#title').offset().left;
+  const titleTop = $('#title').offset().top;
+  const titleWidth = $('#title').innerWidth();
+  const titleHeight = $('#title').outerHeight();
+  $('#mainmenu').width(titleWidth);
+  $('#mainmenu').css('left', titleLeft);
+  $('#mainmenu').css('top', titleTop + titleHeight);
+}
+
+const timerLoop = function(start_time, timer_lenght) {
+  const date = new Date();
+  const nowTime = date.getTime() - errorTime;
+
+  const nowSecond = Math.floor((nowTime - start_time) / 1000);
+  const barWidth = (timer_lenght - nowSecond) / timer_lenght * 100;
+  $('#timer_bar').width(barWidth + "%");
+  $('#timer_text').text(timer_lenght - nowSecond + "s");
+
+  if(nowSecond >= timer_lenght) {
+    playSeSound(pi2SE);
+    return;
+  }
+
+  timerEvent = window.setTimeout(function() {
+    timerLoop(start_time, timer_lenght);
+  }, 500);
+}
