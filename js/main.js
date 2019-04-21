@@ -70,9 +70,7 @@ $(function() {
     const date = new Date();
     const localTimestamp = date.getTime();
 
-    const globalTimestamp = localTimestamp - errorTime;
-
-    if(globalTimestamp <= start_time + timer_lenght * 1000) {
+    if(localTimestamp <= start_time + timer_lenght * 1000) {
       playSeSound(pi1SE);
       timerLoop(start_time, timer_lenght);
     }
@@ -328,10 +326,8 @@ $(function() {
     const date = new Date();
     const localTimestamp = date.getTime();
 
-    const globalTimestamp = localTimestamp - errorTime;
-
     const timer = {
-      start_time: globalTimestamp,
+      start_time: localTimestamp,
       timer_lenght: 60
     }
 
@@ -354,13 +350,13 @@ $(function() {
       return;
     }
 
+    lastFreeTime = timer_length;
+
     const date = new Date();
     const localTimestamp = date.getTime();
 
-    const globalTimestamp = localTimestamp - errorTime;
-
     const timer = {
-      start_time: globalTimestamp,
+      start_time: localTimestamp,
       timer_lenght: timer_length
     }
 
@@ -467,25 +463,11 @@ $(function() {
       $('#mainmenu').slideUp(100);
     }
   });
-
-  $.ajax({
-    type: 'GET',
-    cache: false
-  }).done(function(data, status, xhr) {
-    const serverDate = new Date(xhr.getResponseHeader('Date'));
-    globalTimestamp = serverDate.getTime();
-
-    const date = new Date();
-    const localTimestamp = date.getTime();
-
-    errorTime = localTimestamp - globalTimestamp;
-  });
 });
 
 let nowOdaiText = null;
 let resultEventFlag = false;
 let timerEvent = null;
-let errorTime = 0;
 let lastFreeTime = 60;
 
 let dedenSE, dededenSE;
@@ -547,7 +529,7 @@ const setMainmenu = function() {
 
 const timerLoop = function(start_time, timer_lenght) {
   const date = new Date();
-  const nowTime = date.getTime() - errorTime;
+  const nowTime = date.getTime();
 
   const nowSecond = Math.floor((nowTime - start_time) / 1000);
   const barWidth = (timer_lenght - nowSecond) / timer_lenght * 100;
