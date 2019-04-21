@@ -67,24 +67,15 @@ $(function() {
       window.clearTimeout(timerEvent);
     }
 
-    $.ajax({
-      type: 'GET',
-      cache: false
-    }).done(function(data, status, xhr) {
-      const serverDate = new Date(xhr.getResponseHeader('Date'));
-      globalTimestamp = serverDate.getTime();
+    const date = new Date();
+    const localTimestamp = date.getTime();
 
-      const date = new Date();
-      const localTimestamp = date.getTime();
+    const globalTimestamp = localTimestamp - errorTime;
 
-      errorTime = localTimestamp - globalTimestamp;
-
-      if(globalTimestamp <= start_time + timer_lenght * 1000) {
-        playSeSound(pi1SE);
-        timerLoop(start_time, timer_lenght);
-      }
-
-    });
+    if(globalTimestamp <= start_time + timer_lenght * 1000) {
+      playSeSound(pi1SE);
+      timerLoop(start_time, timer_lenght);
+    }
   });
 
   const resultEvent = function(goodSumList, badSumList) {
@@ -332,26 +323,25 @@ $(function() {
   });
 
   $('#timer_60s_btn').on('click', function() {
-    $.ajax({
-      type: 'GET',
-      cache: false
-    }).done(function(data, status, xhr) {
-      const serverDate = new Date(xhr.getResponseHeader('Date'));
-      globalTimestamp = serverDate.getTime();
-
-      const timer = {
-        start_time: globalTimestamp,
-        timer_lenght: 60
-      }
-
-      const dbTimerStart = db.ref('/timer');
-      dbTimerStart.set(timer);
-    });
-
     $('#mainmenu').slideUp(100);
+
+    const date = new Date();
+    const localTimestamp = date.getTime();
+
+    const globalTimestamp = localTimestamp - errorTime;
+
+    const timer = {
+      start_time: globalTimestamp,
+      timer_lenght: 60
+    }
+
+    const dbTimerStart = db.ref('/timer');
+    dbTimerStart.set(timer);
   });
 
   $('#timer_free_btn').on('click', function() {
+    $('#mainmenu').slideUp(100);
+
     const timer_length_str = window.prompt("時間設定(s)", lastFreeTime);
     const timer_length = parseInt(timer_length_str, 10);
 
@@ -364,24 +354,18 @@ $(function() {
       return;
     }
 
-    $.ajax({
-      type: 'GET',
-      cache: false
-    }).done(function(data, status, xhr) {
-      const serverDate = new Date(xhr.getResponseHeader('Date'));
-      globalTimestamp = serverDate.getTime();
-      lastFreeTime = timer_length;
+    const date = new Date();
+    const localTimestamp = date.getTime();
 
-      const timer = {
-        start_time: globalTimestamp,
-        timer_lenght: timer_length
-      }
+    const globalTimestamp = localTimestamp - errorTime;
 
-      const dbTimerStart = db.ref('/timer');
-      dbTimerStart.set(timer);
-    });
+    const timer = {
+      start_time: globalTimestamp,
+      timer_lenght: timer_length
+    }
 
-    $('#mainmenu').slideUp(100);
+    const dbTimerStart = db.ref('/timer');
+    dbTimerStart.set(timer);
   });
 
   $('#open_btn').on('click', function() {
@@ -482,6 +466,19 @@ $(function() {
     } else {
       $('#mainmenu').slideUp(100);
     }
+  });
+
+  $.ajax({
+    type: 'GET',
+    cache: false
+  }).done(function(data, status, xhr) {
+    const serverDate = new Date(xhr.getResponseHeader('Date'));
+    globalTimestamp = serverDate.getTime();
+
+    const date = new Date();
+    const localTimestamp = date.getTime();
+
+    errorTime = localTimestamp - globalTimestamp;
   });
 });
 
