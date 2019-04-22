@@ -68,7 +68,7 @@ $(function() {
     }
 
     const date = new Date();
-    const localTimestamp = date.getTime();
+    const localTimestamp = date.getTime() - errorTime;
 
     if(localTimestamp <= start_time + timer_lenght * 1000) {
       playSeSound(pi1SE);
@@ -323,11 +323,8 @@ $(function() {
   $('#timer_60s_btn').on('click', function() {
     $('#mainmenu').slideUp(100);
 
-    const date = new Date();
-    const localTimestamp = date.getTime();
-
     const timer = {
-      start_time: localTimestamp,
+      start_time: firebase.database.ServerValue.TIMESTAMP,
       timer_lenght: 60
     }
 
@@ -352,11 +349,8 @@ $(function() {
 
     lastFreeTime = timer_length;
 
-    const date = new Date();
-    const localTimestamp = date.getTime();
-
     const timer = {
-      start_time: localTimestamp,
+      start_time: firebase.database.ServerValue.TIMESTAMP,
       timer_lenght: timer_length
     }
 
@@ -463,12 +457,27 @@ $(function() {
       $('#mainmenu').slideUp(100);
     }
   });
+
+  $('#stamp_btn').on('click', function() {
+
+  });
+
+  const dbWakeTime = db.ref('/wakeTime');
+  dbWakeTime.set(firebase.database.ServerValue.TIMESTAMP);
+  dbWakeTime.once('value', function(snapshot) {
+    const globalTime = snapshot.val();
+    const localTIme = new Date().getTime();
+
+    errorTime = localTIme - globalTime;
+    console.log(errorTime);
+  });
 });
 
 let nowOdaiText = null;
 let resultEventFlag = false;
 let timerEvent = null;
 let lastFreeTime = 60;
+let errorTime = 0;
 
 let dedenSE, dededenSE;
 let dramSE, dramendSE, fanfareSE;
@@ -529,7 +538,7 @@ const setMainmenu = function() {
 
 const timerLoop = function(start_time, timer_lenght) {
   const date = new Date();
-  const nowTime = date.getTime();
+  const nowTime = date.getTime() - errorTime;
 
   const nowSecond = Math.floor((nowTime - start_time) / 1000);
   const barWidth = (timer_lenght - nowSecond) / timer_lenght * 100;
